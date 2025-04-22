@@ -2,20 +2,21 @@ import requests
 import cloudscraper
 from bs4 import BeautifulSoup
 
-scraper = cloudscraper.create_scraper()  # returns a requests.Session object
+
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"    
+}
+BASE_URL = "https://berlinstartupjobs.com"
+
+scraper = cloudscraper.create_scraper() # returns a requests.Session object
 
 for page in range(1, 3):  # 1~2페이지 반복
     if page == 1:
-        url = "https://berlinstartupjobs.com/engineering/"
+        url = f"{BASE_URL}/engineering/"
     else:
-        url = f"https://berlinstartupjobs.com/engineering/page/{page}/"
+        url = f"{BASE_URL}/engineering/page/{page}/"
 
-    headers = {
-        "User-Agent":
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
-    }
-
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=HEADERS)
     soup = BeautifulSoup(response.text, "html.parser")
     jobs = soup.find_all("li", class_="bjs-jlid")
 
@@ -33,13 +34,9 @@ for page in range(1, 3):  # 1~2페이지 반복
 
 def scraper(word):
     # 1. URL 설정
-    url_word = f"https://berlinstartupjobs.com/skill-areas/{word}/"
-    headers = {
-        "User-Agent":
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
-    }
+    url_word= f"{BASE_URL}/skill-areas/{word}/"
     # 2. 웹페이지 요청
-    response_word = requests.get(url_word, headers=headers)
+    response_word = requests.get(url_word, headers=HEADERS)
 
     # 3. BeautifulSoup으로 HTML 파싱
     soup_word = BeautifulSoup(response_word.text, "html.parser")
@@ -69,3 +66,6 @@ scraper("typescript")
 
 #https://berlinstartupjobs.com/skill-areas/javascript/
 scraper("javascript")
+
+
+
